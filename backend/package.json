@@ -16,7 +16,6 @@
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.23.0",
     "postgres": "^3.4.9"
-
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
