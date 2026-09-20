@@ -1,9 +1,16 @@
 import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
 import { connectDB, pool } from './src/config/db.js';
 import userRoutes from './src/routes/user.routes.js';
 
 const app = express();
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}));
 app.use(express.json());
 
 app.use((req, _res, next) => {
