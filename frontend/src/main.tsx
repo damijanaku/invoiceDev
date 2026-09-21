@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import AddBusiness from "./pages/AddBusiness";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
@@ -16,6 +17,7 @@ createRoot(document.getElementById("root")!).render(
 
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/addbusiness" element={<AddBusiness />} />
         </Route>
       </Routes>
     </AuthProvider>
