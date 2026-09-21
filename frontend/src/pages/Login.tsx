@@ -9,6 +9,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { useNavigate } from "react-router";
+import { useAuth } from "@/context/AuthContext";
 
 type FormData = {
   email: string;
@@ -18,11 +19,11 @@ type FormData = {
 type FormErrors = Partial<Record<keyof FormData, string>>;
 
 function Login() {
+  const { login } = useAuth();
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   let navigate = useNavigate();
 
   const [data, setData] = useState<FormData>({
@@ -54,31 +55,8 @@ function Login() {
 
     try {
       setSubmitting(true);
-
-      const response = await fetch("http://localhost:3000/api/v1/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
-      });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        if (body.errors) {
-          setErrors(body.errors);
-        } else {
-          setErrors({ email: body.message || "Something went wrong" });
-        }
-        return;
-      }
-
-      setSuccess(true);
-      setData({ email: "", password: "" });
-      navigate("/login");
+      await login(data.email, data.password);
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       console.error(err);
       setErrors({ email: "Network error. Please try again." });

@@ -8,7 +8,8 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
+import { useAuth } from "../context/AuthContext";
 
 type FormData = {
   fullName: string;
@@ -20,12 +21,13 @@ type FormData = {
 type FormErrors = Partial<Record<keyof FormData, string>>;
 
 function Register() {
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  let navigate = useNavigate();
 
   const [data, setData] = useState<FormData>({
     fullName: "",
@@ -36,28 +38,20 @@ function Register() {
 
   const validateForm = (): FormErrors => {
     const errors: FormErrors = {};
-    if (!data.fullName.trim()) {
-      errors.fullName = "Full name is required.";
-    }
-    if (!data.email.trim()) {
-      errors.email = "Email is required.";
-    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+    if (!data.fullName.trim()) errors.fullName = "Full name is required.";
+    if (!data.email.trim()) errors.email = "Email is required.";
+    else if (!/\S+@\S+\.\S+/.test(data.email))
       errors.email = "Email is invalid.";
-    }
-    if (!data.password) {
-      errors.password = "Password is required.";
-    } else if (data.password.length < 8) {
+    if (!data.password) errors.password = "Password is required.";
+    else if (data.password.length < 8)
       errors.password = "Password must be at least 8 characters.";
-    }
-    if (data.password !== data.confirmPassword) {
+    if (data.password !== data.confirmPassword)
       errors.confirmPassword = "Passwords do not match.";
-    }
     return errors;
   };
 
-  const handleSubmit = async (ev: React.SubmitEvent) => {
+  const handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    setSuccess(false);
 
     const e = validateForm();
     setErrors(e);
@@ -65,38 +59,10 @@ function Register() {
 
     try {
       setSubmitting(true);
-
-      const response = await fetch(
-        "http://localhost:3000/api/v1/users/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fullName: data.fullName,
-            email: data.email,
-            password: data.password,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        if (body.errors) {
-          setErrors(body.errors);
-        } else {
-          setErrors({ email: body.message || "Something went wrong" });
-        }
-        return;
-      }
-
-      setSuccess(true);
-      setData({ fullName: "", email: "", password: "", confirmPassword: "" });
-      navigate("/login");
-    } catch (err) {
-      console.error(err);
-      setErrors({ email: "Network error. Please try again." });
+      await register(data.fullName, data.email, data.password);
+      navigate("/login", { replace: true });
+    } catch (err: any) {
+      setErrors({ email: err.message || "Registration failed" });
     } finally {
       setSubmitting(false);
     }
@@ -116,7 +82,7 @@ function Register() {
         </div>
       </div>
 
-      {/* Right: form area */}
+      {/* Right: form */}
       <div className="overflow-y-auto">
         <form
           onSubmit={handleSubmit}
@@ -186,7 +152,7 @@ function Register() {
             )}
           </Field>
 
-          {/* Password Confirm */}
+          {/* Confirm Password */}
           <Field className="m-2 mb-6 max-w-sm">
             <FieldLabel htmlFor="password-confirm-input">
               Password Confirm
@@ -222,18 +188,17 @@ function Register() {
           >
             {submitting ? "Creating account..." : "Create account"}
           </Button>
+
           <p className="mt-4 text-sm text-gray-600">
             Already have an account?{" "}
-            <a href="/login" className="font-medium text-black hover:underline">
+            <Link
+              to="/login"
+              className="font-medium text-black hover:underline"
+            >
               Log in
-            </a>
+            </Link>
           </p>
         </form>
-        {success && (
-          <p className="text-sm text-green-600">
-            Account created successfully!
-          </p>
-        )}
       </div>
     </div>
   );

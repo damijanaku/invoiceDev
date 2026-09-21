@@ -24,7 +24,6 @@ app.use((req, _res, next) => {
 const PORT = 3000;
 
 app.get('/health', async (req, res) => {
-  const { query } = await import('./db.js');
   const { rows } = await query('SELECT NOW() AS now');
   res.json({ ok: true, db: rows[0].now });
 });

@@ -2,6 +2,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 
+const EMAIL_RE = /^\S+@\S+\.\S+$/;
+
 const hashToken = (token) =>
   crypto.createHash('sha256').update(token).digest('hex');
 
@@ -94,7 +96,7 @@ export const login = async function (req, res) {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        path: '/api/auth',          
+        path: '/api/v1/users',          
         maxAge: 7 * 24 * 60 * 60 * 1000, 
       });
   
@@ -158,7 +160,7 @@ export const refresh = async function (req, res) {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        path: '/api/auth',
+        path: '/api/v1/users', 
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
   
@@ -184,7 +186,7 @@ export const logout = async function (req, res) {
       }
     }
   
-    res.clearCookie('refresh_token', { path: '/api/auth' });
+    res.clearCookie('refresh_token', { path: '/api/v1/users' });
     return res.status(200).json({ message: 'Logged out' });
 };
 
