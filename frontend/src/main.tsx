@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AddBusiness from "./pages/AddBusiness";
+import EditBusiness from "./pages/EditBusiness";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
@@ -17,7 +18,8 @@ createRoot(document.getElementById("root")!).render(
 
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/addbusiness" element={<AddBusiness />} />
+          <Route path="/business/add" element={<AddBusiness />} />
+          <Route path="/business/edit/:id" element={<EditBusiness />} />
         </Route>
       </Routes>
     </AuthProvider>

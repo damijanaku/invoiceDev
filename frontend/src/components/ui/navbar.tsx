@@ -17,6 +17,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { useAuth } from "@/context/AuthContext";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -57,6 +58,24 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 export function NavigationMenuDemo() {
+  const { authFetch } = useAuth();
+  const [businessId, setBusinessId] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const res = await authFetch("http://localhost:3000/api/v1/businesses/");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.businesses?.length > 0) {
+          setBusinessId(data.businesses[0].id);
+        }
+      } catch {
+        // User has no business yet
+      }
+    })();
+  }, []);
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -64,15 +83,25 @@ export function NavigationMenuDemo() {
           <NavigationMenuTrigger>Business</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="w-96">
-              <ListItem to="/addbusiness" title="Add Company">
+              <ListItem to="/business/add" title="Add Company">
                 Add your company and start managing your business effectively.
               </ListItem>
-              <ListItem to="/docs/installation" title="Edit company data">
-                Edit your companies data
-              </ListItem>
-              <ListItem to="/docs/primitives/typography" title="Delete company">
-                Delete company and it's data
-              </ListItem>
+              {businessId && (
+                <>
+                  <ListItem
+                    to={`/business/edit/${businessId}`}
+                    title="Edit company data"
+                  >
+                    Edit your companies data
+                  </ListItem>
+                  <ListItem
+                    to={`/business/delete/${businessId}`}
+                    title="Delete company"
+                  >
+                    Delete company and it's data
+                  </ListItem>
+                </>
+              )}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
