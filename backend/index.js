@@ -4,6 +4,7 @@ import cors from 'cors';
 import { connectDB, pool } from './src/config/db.js';
 import userRoutes from './src/routes/user.routes.js';
 import businessRoutes from './src/routes/business.routes.js';
+import clientRoutes from './src/routes/client.routes.js';
 import cookieParser from 'cookie-parser';
 
 
@@ -31,6 +32,7 @@ app.get('/health', async (req, res) => {
 
 app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/businesses', businessRoutes)
+app.use('/api/v1/clients', clientRoutes)
 
 async function start() {
   await connectDB();  
