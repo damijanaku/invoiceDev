@@ -8,6 +8,8 @@ import EditBusiness from "./pages/EditBusiness";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AddClient from "./pages/AddClient";
+import ClientList from "./pages/ClientList";
+import EditClient from "./pages/EditClient";
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -21,7 +23,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/business/add" element={<AddBusiness />} />
           <Route path="/business/edit/:id" element={<EditBusiness />} />
+          <Route path="/clients" element={<ClientList />} />
           <Route path="/clients/add" element={<AddClient />} />
+          <Route path="/clients/edit/:id" element={<EditClient />} />
         </Route>
       </Routes>
     </AuthProvider>

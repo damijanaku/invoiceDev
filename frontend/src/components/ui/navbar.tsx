@@ -75,11 +75,8 @@ export function NavigationMenuDemo() {
                 Add your clients and start managing your business effectively.
               </ListItem>
               <>
-                <ListItem
-                  to={`/clients/edit/${businessId}`}
-                  title="Edit clients"
-                >
-                  Edit your companies data
+                <ListItem to={`/clients`} title="All clients">
+                  All clients
                 </ListItem>
                 <ListItem
                   to={`/clients/delete/${businessId}`}
@@ -90,45 +87,6 @@ export function NavigationMenuDemo() {
               </>
             </ul>
           </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>With Icon</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[200px]">
-              <li>
-                <NavigationMenuLink
-                  render={
-                    <Link to="#" className="flex-row items-center gap-2">
-                      <CircleAlertIcon />
-                      Backlog
-                    </Link>
-                  }
-                />
-                <NavigationMenuLink
-                  render={
-                    <Link to="#" className="flex-row items-center gap-2">
-                      <CircleDashedIcon />
-                      To Do
-                    </Link>
-                  }
-                />
-                <NavigationMenuLink
-                  render={
-                    <Link to="#" className="flex-row items-center gap-2">
-                      <CircleCheckIcon />
-                      Done
-                    </Link>
-                  }
-                />
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink
-            className={navigationMenuTriggerStyle()}
-            render={<Link to="/docs">Docs</Link>}
-          />
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
